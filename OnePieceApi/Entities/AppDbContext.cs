@@ -10,10 +10,10 @@ public class AppDbContext : DbContext
 
     private string _connectionString = "Server=localhost;Database=OnePieceDb;Trusted_Connection=True;TrustServerCertificate=True";
     
-    //public DbSet<User> Users { get; set; }
-    //public DbSet<Decklist> Decklists { get; set; }
+    public DbSet<User> Users { get; set; }
+    public DbSet<Decklist> Decklists { get; set; }
     public DbSet<Card> Cards { get; set; }
-    //public DbSet<DecklistCards> DecklistCards { get; set; }
+    public DbSet<CardQuantity> DecklistCards { get; set; }
     //Enums
     public DbSet<Archetype> Archetypes { get; set; }
     public DbSet<Attribute> Attributes { get; set; }
