@@ -10,4 +10,6 @@ public class User
     public bool IsActive { get; set; }
     public string Username { get; set; }
     public List<Role> Roles { get; set; }
+    public List<Decklist> Decklists { get; set; }
+    public List<CardQuantity> Collection { get; set; }
 }

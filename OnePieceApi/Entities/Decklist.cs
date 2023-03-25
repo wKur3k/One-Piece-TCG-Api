@@ -9,5 +9,5 @@ public class Decklist
     public string Name { get; set; }
     public User User { get; set; }
     public Visibility Visibility { get; set; }
-    public List<DecklistCards> DecklistCardsList { get; set; }
+    public List<CardQuantity> DecklistCardsList { get; set; }
 }

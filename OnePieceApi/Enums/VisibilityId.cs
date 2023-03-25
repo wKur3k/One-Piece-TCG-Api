@@ -1,6 +1,6 @@
 namespace OnePieceApi.Enums;
 
-public enum VisbilityId
+public enum VisibilityId
 {
     Private,
     Team,
