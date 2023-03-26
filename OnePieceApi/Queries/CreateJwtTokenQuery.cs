@@ -58,6 +58,7 @@ public class CreateJwtTokenQueryHandler : IRequestHandler<CreateJwtTokenQuery, s
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authenticationSettings.JwtKey));
         var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
         var token = new JwtSecurityToken(
+            audience: _authenticationSettings.JwtIssuer,
             issuer: _authenticationSettings.JwtIssuer,
             claims: claims,
             expires: DateTime.Now.AddHours(_authenticationSettings.JwtExpireHours),
