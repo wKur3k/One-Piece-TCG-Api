@@ -12,8 +12,8 @@ using OnePieceApi.Entities;
 namespace OnePieceApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230325111131_InitialMigrationAddition")]
-    partial class InitialMigrationAddition
+    [Migration("20230327171705_FuckMeMigration")]
+    partial class FuckMeMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -90,6 +90,17 @@ namespace OnePieceApi.Migrations
                     b.Property<int?>("Counter")
                         .HasColumnType("int");
 
+                    b.Property<string>("Effect")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("ImageId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("Power")
                         .HasColumnType("int");
 
@@ -108,6 +119,8 @@ namespace OnePieceApi.Migrations
                     b.HasIndex("AttributeId");
 
                     b.HasIndex("CardTypeId");
+
+                    b.HasIndex("ImageId");
 
                     b.HasIndex("RarityId");
 
@@ -186,6 +199,13 @@ namespace OnePieceApi.Migrations
                     b.HasKey("ArchetypeId");
 
                     b.ToTable("Archetypes");
+
+                    b.HasData(
+                        new
+                        {
+                            ArchetypeId = 0,
+                            Name = "FormerNavy"
+                        });
                 });
 
             modelBuilder.Entity("OnePieceApi.Entities.Enums.Attribute", b =>
@@ -571,6 +591,23 @@ namespace OnePieceApi.Migrations
                         });
                 });
 
+            modelBuilder.Entity("OnePieceApi.Entities.Image", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("ImageB64")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Images");
+                });
+
             modelBuilder.Entity("OnePieceApi.Entities.User", b =>
                 {
                     b.Property<long>("Id")
@@ -673,6 +710,12 @@ namespace OnePieceApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("OnePieceApi.Entities.Image", "Image")
+                        .WithMany()
+                        .HasForeignKey("ImageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("OnePieceApi.Entities.Enums.Rarity", "Rarity")
                         .WithMany()
                         .HasForeignKey("RarityId")
@@ -688,6 +731,8 @@ namespace OnePieceApi.Migrations
                     b.Navigation("Attribute");
 
                     b.Navigation("CardType");
+
+                    b.Navigation("Image");
 
                     b.Navigation("Rarity");
 

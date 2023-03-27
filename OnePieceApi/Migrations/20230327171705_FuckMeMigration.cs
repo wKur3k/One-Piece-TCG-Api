@@ -7,7 +7,7 @@
 namespace OnePieceApi.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class FuckMeMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -73,6 +73,19 @@ namespace OnePieceApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Images",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ImageB64 = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Images", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Rarities",
                 columns: table => new
                 {
@@ -109,7 +122,7 @@ namespace OnePieceApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "User",
+                name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -121,7 +134,7 @@ namespace OnePieceApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_User", x => x.Id);
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -142,6 +155,7 @@ namespace OnePieceApi.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Power = table.Column<int>(type: "int", nullable: true),
                     Cost = table.Column<byte>(type: "tinyint", nullable: true),
                     SetId = table.Column<int>(type: "int", nullable: false),
@@ -149,7 +163,9 @@ namespace OnePieceApi.Migrations
                     Counter = table.Column<int>(type: "int", nullable: true),
                     AttributeId = table.Column<int>(type: "int", nullable: false),
                     RarityId = table.Column<int>(type: "int", nullable: false),
-                    CardTypeId = table.Column<int>(type: "int", nullable: false)
+                    CardTypeId = table.Column<int>(type: "int", nullable: false),
+                    Effect = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImageId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -165,6 +181,12 @@ namespace OnePieceApi.Migrations
                         column: x => x.CardTypeId,
                         principalTable: "CardTypes",
                         principalColumn: "CardTypeId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Cards_Images_ImageId",
+                        column: x => x.ImageId,
+                        principalTable: "Images",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Cards_Rarities_RarityId",
@@ -197,15 +219,15 @@ namespace OnePieceApi.Migrations
                         principalColumn: "RoleId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RoleUser_User_UsersId",
+                        name: "FK_RoleUser_Users_UsersId",
                         column: x => x.UsersId,
-                        principalTable: "User",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Decklist",
+                name: "Decklists",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -216,15 +238,15 @@ namespace OnePieceApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Decklist", x => x.Id);
+                    table.PrimaryKey("PK_Decklists", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Decklist_User_UserId",
+                        name: "FK_Decklists_Users_UserId",
                         column: x => x.UserId,
-                        principalTable: "User",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Decklist_Visibilities_VisibilityId",
+                        name: "FK_Decklists_Visibilities_VisibilityId",
                         column: x => x.VisibilityId,
                         principalTable: "Visibilities",
                         principalColumn: "VisibilityId",
@@ -304,7 +326,7 @@ namespace OnePieceApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CardQuantity",
+                name: "DecklistCards",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -316,24 +338,29 @@ namespace OnePieceApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CardQuantity", x => x.Id);
+                    table.PrimaryKey("PK_DecklistCards", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CardQuantity_Cards_CardId",
+                        name: "FK_DecklistCards_Cards_CardId",
                         column: x => x.CardId,
                         principalTable: "Cards",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CardQuantity_Decklist_DecklistId",
+                        name: "FK_DecklistCards_Decklists_DecklistId",
                         column: x => x.DecklistId,
-                        principalTable: "Decklist",
+                        principalTable: "Decklists",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_CardQuantity_User_UserId",
+                        name: "FK_DecklistCards_Users_UserId",
                         column: x => x.UserId,
-                        principalTable: "User",
+                        principalTable: "Users",
                         principalColumn: "Id");
                 });
+
+            migrationBuilder.InsertData(
+                table: "Archetypes",
+                columns: new[] { "ArchetypeId", "Name" },
+                values: new object[] { 0, "FormerNavy" });
 
             migrationBuilder.InsertData(
                 table: "Attributes",
@@ -458,21 +485,6 @@ namespace OnePieceApi.Migrations
                 column: "EffectsEffectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CardQuantity_CardId",
-                table: "CardQuantity",
-                column: "CardId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CardQuantity_DecklistId",
-                table: "CardQuantity",
-                column: "DecklistId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CardQuantity_UserId",
-                table: "CardQuantity",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Cards_AttributeId",
                 table: "Cards",
                 column: "AttributeId");
@@ -481,6 +493,11 @@ namespace OnePieceApi.Migrations
                 name: "IX_Cards_CardTypeId",
                 table: "Cards",
                 column: "CardTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cards_ImageId",
+                table: "Cards",
+                column: "ImageId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cards_RarityId",
@@ -493,13 +510,28 @@ namespace OnePieceApi.Migrations
                 column: "SetId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Decklist_UserId",
-                table: "Decklist",
+                name: "IX_DecklistCards_CardId",
+                table: "DecklistCards",
+                column: "CardId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DecklistCards_DecklistId",
+                table: "DecklistCards",
+                column: "DecklistId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DecklistCards_UserId",
+                table: "DecklistCards",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Decklist_VisibilityId",
-                table: "Decklist",
+                name: "IX_Decklists_UserId",
+                table: "Decklists",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Decklists_VisibilityId",
+                table: "Decklists",
                 column: "VisibilityId");
 
             migrationBuilder.CreateIndex(
@@ -521,7 +553,7 @@ namespace OnePieceApi.Migrations
                 name: "CardEffect");
 
             migrationBuilder.DropTable(
-                name: "CardQuantity");
+                name: "DecklistCards");
 
             migrationBuilder.DropTable(
                 name: "RoleUser");
@@ -539,7 +571,7 @@ namespace OnePieceApi.Migrations
                 name: "Cards");
 
             migrationBuilder.DropTable(
-                name: "Decklist");
+                name: "Decklists");
 
             migrationBuilder.DropTable(
                 name: "Roles");
@@ -551,13 +583,16 @@ namespace OnePieceApi.Migrations
                 name: "CardTypes");
 
             migrationBuilder.DropTable(
+                name: "Images");
+
+            migrationBuilder.DropTable(
                 name: "Rarities");
 
             migrationBuilder.DropTable(
                 name: "Sets");
 
             migrationBuilder.DropTable(
-                name: "User");
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Visibilities");

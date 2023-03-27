@@ -20,6 +20,7 @@ public class AuthenticationController : ControllerBase
 
     [HttpPost]
     [Route("register")]
+    [AllowAnonymous]
     public async Task<IActionResult> RegisterUser([FromBody] UserRegisterDto dto)
     {
         return Ok(await _mediator.Send(new CreateUserCommand(dto)));
@@ -27,6 +28,7 @@ public class AuthenticationController : ControllerBase
 
     [HttpPost]
     [Route("login")]
+    [AllowAnonymous]
     public async Task<IActionResult> LoginUser([FromBody] UserLoginDto dto)
     {
         return Ok(await _mediator.Send(new CreateJwtTokenQuery(dto)));

@@ -6,6 +6,7 @@ namespace OnePieceApi.Entities;
 public class Card
 {
     public int Id { get; set; }
+    public string Name { get; set; }
     public int? Power { get; set; }
     public byte? Cost { get; set; }
     public Set Set { get; set; }
@@ -17,4 +18,6 @@ public class Card
     public CardType CardType { get; set; }
     public List<Archetype> Archetypes { get; set; }
     public List<Effect> Effects { get; set; }
+    public string Effect { get; set; }
+    public Image Image { get; set; }
 }
